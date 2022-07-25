@@ -25,18 +25,14 @@ module_param(modname, charp, 0644);
 MODULE_PARM_DESC(modname, "The name of module you want do clean or delete...\n");
  
  
-//#define CONFIG_REPLACE_EXIT_FUNCTION
- 
+#define CONFIG_REPLACE_EXIT_FUNCTION 1
 #ifdef CONFIG_REPLACE_EXIT_FUNCTION
 //  此处为外部注册的待卸载模块的exit函数
 //  用于替代模块原来的exit函数
 //  注意--此函数由于需要被待删除模块引用, 因此不能声明为static
 /* static */ void force_replace_exit_module_function(void)
 {
-    /
     //  此处完善待卸载驱动的 exit/cleanup 函数
-    /
- 
     printk("module %s exit SUCCESS...\n", modname);
 //    platform_device_unregister((struct platform_device*)(*(int*)symbol_addr));
 }
@@ -45,6 +41,7 @@ MODULE_PARM_DESC(modname, "The name of module you want do clean or delete...\n")
  
 static int force_cleanup_module(char *del_mod_name)
 {
+    if (del_mod_name==NULL) return -1;
     struct module   *mod = NULL, *relate = NULL;
     int              cpu;
 #ifdef CONFIG_REPLACE_EXIT_FUNCTION
@@ -119,9 +116,9 @@ static int force_cleanup_module(char *del_mod_name)
     atomic_set(&mod->refcnt, 1);
  
 #ifdef CONFIG_REPLACE_EXIT_FUNCTION
-    /
+    
     //  重新注册驱动的exit函数
-    /
+    
     origin_exit_addr = mod->exit;
     if (origin_exit_addr == NULL)
     {
