@@ -15,7 +15,6 @@ https://blog.csdn.net/gatieme/article/details/75108154?biz_id=102&utm_term=linux
 ```angular2html
 line 28: 
 	#define CONFIG_REPLACE_EXIT_FUNCTION 1(original is 0)
-					      ^
 line 33~38:
 	/* static */ void force_replace_exit_module_function(void)						
 	...
